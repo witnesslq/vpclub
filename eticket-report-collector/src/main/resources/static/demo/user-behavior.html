@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app1">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="angular.min.js"></script>
+</head>
+<body ng-controller="app1Controller">
+
+<button ng-click="addEnterLog()">addEnterLog</button>
+<button ng-click="addTouchTicketLog()">addTouchTicketLog</button>
+<button ng-click="addUserEventLog()">addUserEventLog</button>
+
+<script>
+
+    var urlBase = "http://112.74.129.206/eticket-report-collector";
+  // var urlBase = "http://localhost:8081/eticket-report-collector";
+
+
+    var app = angular.module("app1", []);
+    app.controller("app1Controller", function ($scope, $http) {
+
+        var enterLog = {
+            activityId: "a001",
+            activityName: "活动001",
+            userType: 2, //1为短信，2为微信
+            userName: "15019460591",
+            fromUserType: "1",
+            fromUserName: "qqeqxxxx",
+            clientUserAgent: navigator.userAgent,
+            redirectB: 1  //0为A面，1为B面
+        };
+        $scope.addEnterLog = function () {
+            $http({
+                method: "post",
+                url: urlBase + "/collector/enterLog/add",
+                data: enterLog
+            }).success(function (data) {
+                console.log(data);
+            });
+        };
+
+
+        var touchTicketLog = {
+            activityId: "a001",
+            userType: 1, //1为短信，2为微信
+            userName: "15019460591",
+            ticketTypeId: "t001"
+        };
+        $scope.addTouchTicketLog = function () {
+            $http({
+                method: "post",
+                url: urlBase + "/collector/touchTicketLog/add",
+                data: touchTicketLog
+            }).success(function (data) {
+                console.log(data);
+            });
+        };
+
+        var userEventLog = {
+            activityId: "a001",
+            activityName: "活动001",
+            userType: 1, //1为短信，2为微信
+            userName: "15019460591",
+            eventType: 1
+        };
+        $scope.addUserEventLog = function () {
+            $http({
+                method: "post",
+                url: urlBase + "/collector/userEventLog/add",
+                data: userEventLog
+            }).success(function (data) {
+                console.log(data);
+            });
+        };
+
+
+    });
+</script>
+
+
+</body>
+</html>
