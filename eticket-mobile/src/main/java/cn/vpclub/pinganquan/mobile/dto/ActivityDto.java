@@ -1,0 +1,325 @@
+package cn.vpclub.pinganquan.mobile.dto;
+
+import javax.persistence.Id;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/5/9.
+ */
+public class ActivityDto {
+    @Id
+    private String id;
+
+
+    /**
+     * 模板标识
+     */
+    private String templateId;
+
+
+    /**
+     * 活动名称
+     */
+    private String activtyName;
+
+    /**
+     * 品牌图片路径
+     */
+    private String logoUrl;
+
+
+    /**
+     * slogan图片路径
+     */
+    private String sloganUrl;
+
+
+    /**
+     * 背景图片路径
+     */
+    private String backgroundUrl;
+
+
+    /**
+     * 扑克牌背面图片
+     */
+    private String pokerBackUrl;
+
+    /**
+     * 合作企业图片1
+     */
+    private String enterpriseUrl1;
+
+
+    /**
+     * 合作企业图片2
+     */
+    private String enterpriseUrl2;
+
+
+    /**
+     * 合作企业图片3
+     */
+    private String enterpriseUrl3;
+
+
+    /**
+     * 合作企业图片4
+     */
+    private String enterpriseUrl4;
+
+
+    /**
+     * A面主标题
+     */
+    private String aTitle;
+
+
+    /**
+     * A面副标题
+     */
+    private String aSubtitle;
+
+    /**
+     * A面翻牌按钮文案
+     */
+    private String aBtnTxt;
+
+    /**
+     * A面活动说明文案
+     */
+    private String aDescription;
+
+
+    /**
+     * B面分享按钮文案
+     */
+    private String bShareBtn;
+
+
+    /**
+     * 分享图文图片
+     */
+    private String sharePic;
+
+    /**
+     * 分享图文标题
+     */
+    private String shareTitle;
+
+
+    /**
+     * 分享图文文案
+     */
+    private String shareContent;
+
+
+    /**
+     * 活动说明
+     */
+    private String activityDescription;
+
+    /**
+     * 活动状态  1：未开始，  2：进行中， 3：已结束
+     */
+    private int status;
+
+
+    /**
+     * 活动所包含的扑克的详情
+     */
+    private List<PokerDetailDto> pokerDetails;
+
+
+    /**
+     * 抽奖结果
+     */
+    private DrawResultDto drawResult;
+
+
+    public String getShareContent() {
+        return shareContent;
+    }
+
+    public void setShareContent(String shareContent) {
+        this.shareContent = shareContent;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getActivtyName() {
+        return activtyName;
+    }
+
+    public void setActivtyName(String activtyName) {
+        this.activtyName = activtyName;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getSloganUrl() {
+        return sloganUrl;
+    }
+
+    public void setSloganUrl(String sloganUrl) {
+        this.sloganUrl = sloganUrl;
+    }
+
+    public String getBackgroundUrl() {
+        return backgroundUrl;
+    }
+
+    public void setBackgroundUrl(String backgroundUrl) {
+        this.backgroundUrl = backgroundUrl;
+    }
+
+
+    public String getPokerBackUrl() {
+        return pokerBackUrl;
+    }
+
+    public void setPokerBackUrl(String pokerBackUrl) {
+        this.pokerBackUrl = pokerBackUrl;
+    }
+
+    public String getEnterpriseUrl1() {
+        return enterpriseUrl1;
+    }
+
+    public void setEnterpriseUrl1(String enterpriseUrl1) {
+        this.enterpriseUrl1 = enterpriseUrl1;
+    }
+
+    public String getEnterpriseUrl2() {
+        return enterpriseUrl2;
+    }
+
+    public void setEnterpriseUrl2(String enterpriseUrl2) {
+        this.enterpriseUrl2 = enterpriseUrl2;
+    }
+
+    public String getEnterpriseUrl3() {
+        return enterpriseUrl3;
+    }
+
+    public void setEnterpriseUrl3(String enterpriseUrl3) {
+        this.enterpriseUrl3 = enterpriseUrl3;
+    }
+
+    public String getEnterpriseUrl4() {
+        return enterpriseUrl4;
+    }
+
+    public void setEnterpriseUrl4(String enterpriseUrl4) {
+        this.enterpriseUrl4 = enterpriseUrl4;
+    }
+
+    public String getaTitle() {
+        return aTitle;
+    }
+
+    public void setaTitle(String aTitle) {
+        this.aTitle = aTitle;
+    }
+
+    public String getaSubtitle() {
+        return aSubtitle;
+    }
+
+    public void setaSubtitle(String aSubtitle) {
+        this.aSubtitle = aSubtitle;
+    }
+
+    public String getaBtnTxt() {
+        return aBtnTxt;
+    }
+
+    public void setaBtnTxt(String aBtnTxt) {
+        this.aBtnTxt = aBtnTxt;
+    }
+
+    public String getaDescription() {
+        return aDescription;
+    }
+
+    public void setaDescription(String aDescription) {
+        this.aDescription = aDescription;
+    }
+
+    public String getbShareBtn() {
+        return bShareBtn;
+    }
+
+    public void setbShareBtn(String bShareBtn) {
+        this.bShareBtn = bShareBtn;
+    }
+
+    public String getSharePic() {
+        return sharePic;
+    }
+
+    public void setSharePic(String sharePic) {
+        this.sharePic = sharePic;
+    }
+
+    public String getShareTitle() {
+        return shareTitle;
+    }
+
+    public void setShareTitle(String shareTitle) {
+        this.shareTitle = shareTitle;
+    }
+
+
+    public List<PokerDetailDto> getPokerDetails() {
+        return pokerDetails;
+    }
+
+    public void setPokerDetails(List<PokerDetailDto> pokerDetails) {
+        this.pokerDetails = pokerDetails;
+    }
+
+    public String getActivityDescription() {
+        return activityDescription;
+    }
+
+    public void setActivityDescription(String activityDescription) {
+        this.activityDescription = activityDescription;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public DrawResultDto getDrawResult() {
+        return drawResult;
+    }
+
+    public void setDrawResult(DrawResultDto drawResult) {
+        this.drawResult = drawResult;
+    }
+}

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" ng-app="app1">
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" th:href="@{${templateUrl + '/css/style.css'}}"/>
+    <link rel="stylesheet" th:href="@{${templateUrl + '/css/animate.css'}}"/>
+    <link rel="stylesheet" th:href="@{${templateUrl + '/css/swiper-3.3.1.min.css'}}"/>
+
+    <script th:src="@{${templateUrl + '/js/jquery-2.1.4.min.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/ZeroClipboard.min.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/iscroll.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/angular.min.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/swiper-3.3.1.jquery.min.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/angular-sanitize.min.js'}}"></script>
+    <script th:src="@{${templateUrl + '/js/jquery.cookie.js'}}"></script>
+
+</head>
+<body onload="loaded()" ng-controller="ACoverController">
+<div id="headlogo">
+    <img ng-if="businessLogo.logoUrl!=''" ng-src="{{businessLogo.logoUrl}}"/>
+    <img ng-if="businessLogo.enterpriseUrl1!=''" ng-src="{{businessLogo.enterpriseUrl1}}"/>
+    <img ng-if="businessLogo.enterpriseUrl2!=''" ng-src="{{businessLogo.enterpriseUrl2}}"/>
+    <img ng-if="businessLogo.enterpriseUrl3!=''" ng-src="{{businessLogo.enterpriseUrl3}}"/>
+    <img ng-if="businessLogo.enterpriseUrl4!=''" ng-src="{{businessLogo.enterpriseUrl4}}"/>
+</div>
+<div id="title">
+    <div id="Maintitle">{{title.main}}</div>
+    <div id="subtitle">{{title.subtitle}}</div>
+</div>
+<div id="lightbord">
+    <div id="scrollerBox">
+        <div id="scroller">
+            <div ng-show="smallWin" class="smallWin" ng-click="showWinPoker()">
+                <div class="winInfos">
+                    <div class="gongxis">真会玩</div>
+                    <div class="wintipss">{{winPokerInfo.copyWriting}}</div>
+                    <img class="winImages" ng-src="{{winPokerInfo.tickeImageUrl}}"/>
+                    <div class="winGets">获得<span class="winTitle">{{winPokerInfo.ticketName}}</span></div>
+                </div>
+            </div>
+            <div ng-show="smallUnwin" class="smallUnwin" ng-click="showUnwinPoker()">
+                <div class="smallSad">
+                    <div class="smallSadtips">{{winPokerInfo.copyWriting}}</div>
+                </div>
+            </div>
+            <ul>
+                <li class="animated bounceInRight" ng-repeat="ticketDetail in pokerDetails"
+                    ng-click="getPokerDetail(ticketDetail.ticketId)">
+                    <img class="pokerBack" ng-src="{{ticket.pokerBackUrl}}"/>
+                    <div class="back"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <img id="right" th:src="@{${templateUrl + '/img/right.png'}}"/>
+    <div ng-show="businessLogo.status == 2" id="clickButton" ng-click="lotterys()">{{ticket.aBtnTxt}}</div>
+    <div ng-show="businessLogo.status == 1 ||businessLogo.status == 3 ||businessLogo.status == 4" id="clickButton1">
+        {{ticket.aBtnTxt}}
+    </div>
+</div>
+
+<div ng-show="AorB.result == 1" class="waysCon">
+    <div class="explanBox">
+        <img class="useTicket" th:src="@{${templateUrl + '/img/useTicket.png'}}" width="100%"/>
+    </div>
+    <div id="useTicCon">
+        扔到微信即可二次摸券！
+    </div>
+    <div id="shareTitle">您可以采取以下分享方式</div>
+    <div class="number">1</div>
+    <div class="way">最快：使用<span class="speFont">浏览器本身按钮</span>，扔到微信再打开即可用券！</div>
+    <div class="shareBox">
+        <img class="shareOne" th:src="@{${templateUrl + '/img/shareOne.png'}}"/>
+    </div>
+    <div class="number">2</div>
+    <div class="way">较快：点击<span class="speFont">页面最下面复制链接</span>，扔到微信，点击即可用券！</div>
+    <div class="shareBox">
+        <img class="shareOne" th:src="@{${templateUrl + '/img/shareTwo.png'}}"/>
+    </div>
+    <div class="number">3</div>
+    <div class="way">最慢：<span class="speFont">长按并保存二维码</span>，扔到微信，<span class="speFont">微信识别或扫一扫</span>即可用券！</div>
+</div>
+<div ng-show="AorB.result == 1" class="shareBoxs">
+    <img class="shareOnes" th:src="@{${templateUrl + '/img/erweima.png'}}"/>
+
+</div>
+<div class="explanBox0">
+    <img class="explan" th:src="@{${templateUrl + '/img/explanation.png'}}"/>
+</div>
+<div id="explaCon" ng-bind-html="title.aDescription">
+</div>
+<div id="warn">
+    <img th:src="@{${templateUrl + '/img/down.png'}}" width="20px" height="15px"/>
+</div>
+<div id="link" data-clipboard-text='{{shareLink}}'></div>
+<div id="pinanLogo">
+    <img ng-if="businessLogo.sloganUrl!=''" ng-src="{{businessLogo.sloganUrl}}" width="120px" height="60px"/>
+</div>
+
+<div class="Backdrop">
+    <!-- 退出按钮 -->
+    <img class="delete" th:src="@{${templateUrl + '/img/delete.png'}}" ng-click="sideCtrl(0);"/>
+    <!-- 活动进行中 -->
+    <div ng-show="Starting" class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide porkerItem" ng-repeat="poderDe in pokerDetails">
+                <div class="poderDeCon">
+                    <div class="poderDeTitle">{{poderDe.ticketName}}</div>
+                    <img class="tickeImageUrl" ng-src="{{poderDe.tickeImageUrl}}"/>
+                    <div class="ticketActPrice">{{poderDe.ticketActPrice | currency :"￥"}}</div>
+                    <div class="numbers">已被疯摸了{{poderDe.virtualNum}}张,剩余 <span class="ticketActPrice">{{poderDe.remainNum}}</span>
+                        张
+                    </div>
+                    <div class="ticketBrief" ng-bind-html="poderDe.ticketBrief"></div>
+                </div>
+                <p ng-show="isPreviews == false" class="moreDe" ng-click="getPokerMoreDetail(1,poderDe.ticketId)">
+                    更多详情>></p>
+                <p ng-show="isPreviews == true" class="moreDe" ng-click="getWinnigDetail(1,poderDe.ticketId)">
+                    领奖必看>></p>
+            </div>
+        </div>
+    </div>
+    <!-- 活动未开始提示框 -->
+    <div ng-if="notStart" class="advanceTip">
+        <div class="tips">
+            亲，来的有点早，活动尚未开始，先看下我们准备了哪些神秘大礼吧！
+        </div>
+        <img class="advanbox" th:src="@{${templateUrl + '/img/giftbox.png'}}"/>
+        <div class="advanButton" ng-click="goAround()">去逛逛</div>
+    </div>
+    <!--  中奖界面-->
+    <div ng-show="win" class="light">
+        <div class="winBox">
+            <div class="colorRibbon">
+                <div class="winInfo">
+                    <div class="gongxi">真会玩</div>
+                    <div class="wintips">{{winPokerInfo.copyWriting}}</div>
+                    <img class="winImage" ng-src="{{winPokerInfo.tickeImageUrl}}"/>
+                    <div class="winGet">获得<span class="winTitle">{{winPokerInfo.ticketName}}</span></div>
+                </div>
+                <p class="mustSee" ng-click="getWinnigDetail(1,winPokerInfo.ticketId)">领奖必看>></p>
+            </div>
+        </div>
+    </div>
+
+    <!--  未中奖界面-->
+    <div ng-show="unwin" class="light">
+        <div class="unwinBox">
+            <div class="sad">
+                <div class="language">
+                    {{winPokerInfo.copyWriting}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="Backdrop0">
+    <!-- 退出按钮 -->
+    <img class="delete" th:src="@{${templateUrl + '/img/delete.png'}}" ng-click="sideCtrl0(0);"/>
+    <div class="copyBox">
+        <div>链接复制成功,请在微信中粘贴发送</div>
+    </div>
+</div>
+
+<div class="moreTicketDetail">
+    <img class="return" th:src="@{${templateUrl + '/img/return.png'}}" ng-click="getPokerMoreDetail(0)"/>
+    <div class="moreTicDeBox">
+        <span class="moreDeTitle">{{pokerMoreDetail.ticketName}}</span>
+        <div class="moreDeImgUrl">
+            <img ng-if="pokerMoreDetail.tickeImageUrl!=''" ng-src="{{pokerMoreDetail.tickeImageUrl}}"/>
+        </div>
+        <div class="moreTicketSpecs" ng-bind-html="pokerMoreDetail.ticketSpecifics"></div>
+    </div>
+</div>
+<div class="winTicketDetail">
+    <img class="return" th:src="@{${templateUrl + '/img/return.png'}}" ng-click="getWinnigDetail(0)"/>
+    <div class="moreTicDeBox">
+        <span class="moreDeTitle">{{winPokerMoreDetail.ticketName}}</span>
+        <div class="moreDeImgUrl">
+            <img ng-show="winPokerMoreDetail.tickeImageUrl!=''" ng-src="{{winPokerMoreDetail.tickeImageUrl}}"/>
+        </div>
+        <div class="moreTicketSpecs" ng-bind-html="winPokerMoreDetail.ticketBrief"></div>
+        <div class="ticketSpecifics" ng-bind-html="winPokerMoreDetail.ticketSpecifics"></div>
+        <div class="usageGuide"></div>
+        <div class="codeUrlBox">
+            <img ng-show="winPokerMoreDetail.tickeCodeUrl!=''" ng-src="{{winPokerMoreDetail.tickeCodeUrl}}"/>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var urlBase1 = [[${urlBase1}]];
+    var urlBase2 = [[${urlBase2}]];
+
+    /*纸牌背景图片滑动*/
+    var myScroll;
+
+    function loaded() {
+        myScroll = new IScroll('#scrollerBox', {
+            eventPassthrough: true,
+            scrollX: true,
+            scrollY: false,
+            preventDefault: false
+        });
+        $('#scrollerBox li').click(function () {
+            if ($(this).hasClass('back_hover')) {
+                $(this).removeClass('back_hover').addClass('back_out');
+            } else {
+                $(this).removeClass('back_out').addClass('back_hover');
+            }
+            setTimeout(function () {
+                $('.Backdrop').addClass('ation');
+                $('#scrollerBox li').removeClass('back_hover');
+            }, 700)
+        });
+        $("ul li.bounceInRight").each(function (index) {
+            var a = 100;
+            var zIndex = a - index;
+            $(this).css('z-index', zIndex);
+        })
+    }
+    var app = angular.module("app1", ['ngSanitize']);
+    app.controller('ACoverController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+        var activity = getUrlParam("activityId");
+        // 获取url中的参数
+        var from = getUrlParam("from");
+        var type = getUrlParam("type");
+        var previews = getUrlParam("preview");
+        var token = $.cookie('token');
+        var userString = decodeURI($.cookie('user'));
+        var user = JSON.parse($.cookie('user'));
+        console.log(user);
+        // {"userName":"15019460599","userType":2,"fromUserName":"15019460591","fromUserType":1}
+        $scope.illeaRequest = true;
+        //是否微信环境
+
+        var useragent = "";
+        // 若是微信环境
+        if (isWeiXin() == true) {
+            useragent = 1;
+        } else { // 若是普通浏览器环境
+            useragent = 2;
+        }
+
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+        function isWeiXin() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+        /*商业logo*/
+        $scope.businessLogo = {
+            logoUrl: '',
+            enterpriseUrl1: '',
+            enterpriseUrl2: '',
+            enterpriseUrl3: '',
+            enterpriseUrl4: '',
+            sloganUrl: '',
+            status: ""
+        }
+        /*标题*/
+        $scope.title = {
+            activtyName: '',
+            main: '',
+            subtitle: '',
+            aDescription: ''
+        }
+        $scope.ticket = {
+            pokerBackUrl: '',
+            aBtnTxt: ''
+        }
+        $scope.ticketDetail = {
+            remainNum: "",
+            tickeImageUrl: "",
+            ticketActPrice: "",
+            ticketBrief: "",
+            ticketId: "",
+            ticketName: "",
+            virtualNum: ""
+        }
+        /*判定A/B面*/
+        $scope.AorB = {
+            result: ""
+        };
+        /*中奖页面数据*/
+        $scope.winPokerInfo = {
+            status: "",
+            copyWriting: "",
+            ticketId: "",
+            ticketName: "",
+            tickeImageUrl: "",
+            usageGuide1: "",
+            usageGuide2: "",
+            ticketCodeType: "",
+            ticketNo: "",
+            ticketNoPic: ""
+        }
+        /*活动名称*/
+        var activityName = "";
+        /*poker信息数组*/
+        $scope.pokerDetails = [];
+        /*poker详情背景图数组*/
+        $scope.poderBackImagins = [];
+        /*参与抽奖活动后的poker背景图片*/
+        var drawedPokerBack = '';
+        /*页面初始化方法*/
+        $scope.init = function () {
+            var params = '';
+            if (previews == null) {
+                params = {
+                    activityId: activity
+                };
+                $scope.isPreviews = false;
+            }
+            if (previews == 'true') {
+                params = {
+                    activityId: activity,
+                    preview: true
+                }
+                $scope.isPreviews = true;
+            }
+            $http({
+                method: "get",
+                url: urlBase1 + "/api/activity",
+                params: params
+            }).success(function (data) {
+                console.log(data.data);
+                if (data.code == 1001) {
+                    console.log("未找到活动");
+                    return;
+                }
+                if (data.code == 1000) {
+                    /*$scope.businessLogo.status = data.data.status;*/
+                    $scope.businessLogo.status = 2;
+                    $scope.businessLogo.logoUrl = data.data.logoUrl;
+                    $scope.businessLogo.enterpriseUrl1 = data.data.enterpriseUrl1;
+                    $scope.businessLogo.enterpriseUrl2 = data.data.enterpriseUrl2;
+                    $scope.businessLogo.enterpriseUrl3 = data.data.enterpriseUrl3;
+                    $scope.businessLogo.enterpriseUrl4 = data.data.enterpriseUrl4;
+                    $scope.businessLogo.sloganUrl = data.data.sloganUrl;
+                    $scope.pokerBackUrl = data.data.pokerBackUrl;
+                    $scope.pokerDetails = data.data.pokerDetails;
+                    $scope.ticket.pokerBackUrl = data.data.pokerBackUrl;
+                    $scope.ticket.aBtnTxt = data.data.aBtnTxt;
+                    $scope.title.activtyName = data.data.activtyName;
+                    activityName = data.data.activtyName;
+                    $scope.title.main = data.data.aTitle;
+                    $scope.title.subtitle = data.data.aSubtitle;
+                    $scope.title.aDescription = data.data.aDescription;
+                    //已经参与了活动，将结果赋给drawResult
+                    if (data.data.drawResult != null) {
+                        $scope.winPokerInfo = data.data.drawResult;
+                    }
+
+                    //活动未开始
+                    if ($scope.businessLogo.status == 1) {
+                        //活动未开始提示打开
+                        $scope.notStart = true;
+                        //活动纸牌打开
+                        $scope.Starting = false;
+                        //中奖界面关闭
+                        $scope.win = false;
+                        //未中奖界面关闭
+                        $scope.unwin = false;
+                        $scope.ticket.aBtnTxt = "活动未开始,期待中";
+                        setTimeout(function () {
+                            $('.Backdrop').addClass('ation');
+                        }, 700)
+                    }
+                    //活动进行中
+                    if ($scope.businessLogo.status == 2) {
+                        //活动未开始提示打开
+                        $scope.notStart = false;
+                        //活动纸牌打开
+                        $scope.Starting = true;
+                        //中奖界面关闭
+                        $scope.win = false;
+                        //未中奖界面关闭
+                        $scope.unwin = false;
+                        if (data.data.pokerDetails.length <= 4) {
+                            $('#scroller').width("400px");
+                        } else {
+                            $('#scroller').width((data.data.pokerDetails.length - 1) * 50 + "px");
+                        }
+                    }
+                    //活动已结束
+                    if ($scope.businessLogo.status == 3) {
+                        //活动未开始提示打开
+                        $scope.notStart = false;
+                        //活动纸牌打开
+                        $scope.Starting = true;
+                        //中奖界面关闭
+                        $scope.win = false;
+                        //未中奖界面关闭
+                        $scope.unwin = false;
+                        $scope.ticket.aBtnTxt = "活动已结束,下期见";
+                    }
+                    //是否参与了活动
+                    if (data.data.drawResult == null) {
+                        $scope.AorB.result = 0;
+                        $scope.smallWin = false;
+                        $scope.smallUnwin = false;
+                    } else if (data.data.drawResult.status == true) {//中奖
+                        $scope.AorB.result = 1;
+                        $scope.smallWin = true;
+                        $scope.ticket.aBtnTxt = "手气棒棒哒";
+                        $scope.businessLogo.status = 4;
+                        drawedPokerBack = $scope.getPokerBackground();
+                        var drawedRimlessPokerBack = $scope.getRimlessPokerBack(drawedPokerBack);
+                        $('#scroller .smallWin').css({
+                            'width': '100px',
+                            'height': '160px',
+                            'background': 'url(' + drawedRimlessPokerBack + ') no-repeat',
+                            'background-size': '100px 160px'
+                        });
+                        $('#scroller ul').css('margin-left', '100px');
+
+                    } else if (data.data.drawResult.status == false) {//未中奖
+                        $scope.AorB.result = 1;
+                        $scope.smallUnwin = false;
+                        $scope.ticket.aBtnTxt = "别灰心，下次必中";
+                        $scope.businessLogo.status = 4;
+                        drawedPokerBack = $scope.getPokerBackground();
+                        var drawedRimlessPokerBack = $scope.getRimlessPokerBack(drawedPokerBack);
+                        $('#scroller .smallWin').css({
+                            'width': '100px',
+                            'height': '160px',
+                            'background': 'url(' + drawedRimlessPokerBack + ') no-repeat',
+                            'background-size': '100px 160px'
+                        });
+                        $('#scroller ul').css('margin-left', '100px');
+                    }
+                    //给poker随机附背景图
+                    for (var i = 0; i < $scope.pokerDetails.length; i++) {
+                        var poderBack = $scope.getPokerBackground();
+                        $scope.poderBackImagins.push(poderBack);
+                    }
+
+
+                }
+            });
+            if (previews == null) {
+                var enterLog = {
+                    activityId: activity,
+                    activityName: activityName,
+                    userType: user.userType, //1为短信，2为微信
+                    userName: user.userName,
+                    fromUserType: user.fromUserType,
+                    fromUserName: user.fromUserName,
+                    clientUserAgent: navigator.userAgent,
+                    redirectB: $scope.AorB.result //0为A面，1为B面
+                };
+                $http({
+                    method: "post",
+                    url: urlBase2 + "/collector/enterLog/add",
+                    data: enterLog
+                }).success(function (data) {
+                    console.log(data);
+                });
+            }
+        }
+        $scope.init();
+        /*随机获取poker背景图片*/
+        $scope.getPokerBackground = function () {
+            var indexNum = Math.floor(Math.random() * 54);
+            return [[${templateUrl}]] + '/poder/' + indexNum + '.png';
+        }
+        /*获取无边框poker背景图片*/
+        $scope.getRimlessPokerBack = function (str) {
+            var index = str.lastIndexOf("/");
+            var filename = str.substring(index + 1);
+            return [[${templateUrl}]] + '/rimlessPoder/' + filename;
+        }
+        /*点击小图片看大图(中奖)*/
+        $scope.showWinPoker = function () {
+            //活动未开始提示关闭
+            $scope.notStart = false;
+            //活动纸牌关闭
+            $scope.Starting = false;
+            //中奖界面开启
+            $scope.win = true;
+            //未中奖界面关闭
+            $scope.unwin = false;
+            $('.Backdrop .winBox').css({
+                'background': 'url(' + drawedPokerBack + ') no-repeat',
+                'background-size': '100% 100%'
+            });
+            setTimeout(function () {
+                $('.Backdrop').addClass('ation');
+            }, 300)
+        }
+        /*点击小图片看大图（未中奖）*/
+        $scope.showUnwinPoker = function () {
+            //活动未开始提示关闭
+            $scope.notStart = false;
+            //活动纸牌关闭
+            $scope.Starting = false;
+            //中奖界面开启
+            $scope.win = false;
+            //未中奖界面关闭
+            $scope.unwin = true;
+            $('.Backdrop .winBox').css({
+                'background': 'url(' + drawedPokerBack + ') no-repeat',
+                'background-size': '100% 100%'
+            });
+            setTimeout(function () {
+                $('.Backdrop').addClass('ation');
+            }, 300)
+
+        }
+        /*抽奖*/
+        $scope.lotterys = function () {
+            var params = {};
+            if (previews == null) {
+                params = {
+                    activityId: activity
+                };
+            }
+            if (previews == 'true') {
+                params = {
+                    activityId: activity,
+                    preview: true
+                }
+            }
+            $http({
+                method: "get",
+                url: urlBase1 + "/api/activity/draw",
+                params: params
+            }).success(function (data) {
+                console.log(data.data);
+                if (data.code == 1000) {
+                    $scope.winPokerInfo.status = data.data.status;
+                    $scope.winPokerInfo.copyWriting = data.data.copyWriting;
+                    $scope.winPokerInfo.ticketId = data.data.ticketId;
+                    $scope.winPokerInfo.ticketName = data.data.ticketName;
+                    $scope.winPokerInfo.tickeImageUrl = data.data.tickeImageUrl;
+                    $scope.winPokerInfo.usageGuide1 = data.data.usageGuide1;
+                    $scope.winPokerInfo.usageGuide2 = data.data.usageGuide2;
+                    $scope.winPokerInfo.ticketCodeType = data.data.ticketCodeType;
+                    $scope.winPokerInfo.ticketNo = data.data.ticketNo;
+                    $scope.winPokerInfo.ticketNoPic = data.data.ticketNoPic;
+                    //   $scope.winPokerInfo.status = false;
+                    $scope.AorB.result = 1;
+                    //中奖
+                    if ($scope.winPokerInfo.status == true) {
+                        //活动未开始提示关闭
+                        $scope.notStart = false;
+                        //活动纸牌关闭
+                        $scope.Starting = false;
+                        //中奖界面开启
+                        $scope.win = true;
+                        //未中奖界面关闭
+                        $scope.unwin = false;
+                        //设置poker背景图片
+                        var pokerbackground = $scope.getPokerBackground();
+                        drawedPokerBack = pokerbackground;
+                        var drawedRimlessPokerBack = $scope.getRimlessPokerBack(pokerbackground);
+                        $('.Backdrop .winBox').css({
+                            'background': 'url(' + pokerbackground + ') no-repeat',
+                            'background-size': '100% 100%'
+                        });
+                        setTimeout(function () {
+                            $('.Backdrop').addClass('ation');
+                            $scope.businessLogo.status = 1;
+                            $scope.ticket.aBtnTxt = "手气棒棒哒";
+                            $scope.smallWin = true;
+                            $('#scroller .smallWin').css({
+                                'width': '100px',
+                                'height': '160px',
+                                'background': 'url(' + drawedRimlessPokerBack + ') no-repeat',
+                                'background-size': '100px 160px'
+                            });
+                            $('#scroller ul').css('margin-left', '100px');
+                            //分享、二维码显示
+                            $scope.AorB.result = 1;
+                        }, 700);
+                    } else {
+                        //活动未开始提示关闭
+                        $scope.notStart = false;
+                        //活动纸牌关闭
+                        $scope.Starting = false;
+                        //中奖界面关闭
+                        $scope.win = false;
+                        //未中奖界面开启
+                        $scope.unwin = true;
+                        //设置poker背景图片
+                        var pokerbackground = $scope.getPokerBackground();
+                        drawedPokerBack = pokerbackground;
+                        var drawedRimlessPokerBack = $scope.getRimlessPokerBack(pokerbackground);
+                        $('.Backdrop .unwinBox').css({
+                            'background': 'url(' + pokerbackground + ') no-repeat',
+                            'background-size': '100% 100%'
+                        });
+                        setTimeout(function () {
+                            $('.Backdrop').addClass('ation');
+                            $scope.businessLogo.status = 1;
+                            $scope.ticket.aBtnTxt = "别灰心，下次必中!";
+                            $scope.smallUnwin = true;
+                            $('#scroller .smallUnwin').css({
+                                'width': '100px',
+                                'height': '160px',
+                                'background': 'url(' + drawedRimlessPokerBack + ') no-repeat',
+                                'background-size': '100px 160px'
+                            });
+                            $('#scroller ul').css('margin-left', '100px');
+                            //分享、二维码显示
+                            $scope.AorB.result = 1;
+                        }, 700)
+                    }
+                }
+                //已经参与了活动
+                if (data.code == 1001) {
+                    //活动未开始提示关闭
+                    $scope.notStart = false;
+                    //活动纸牌打开
+                    $scope.Starting = false;
+                    //中奖界面关闭
+                    $scope.win = false;
+                    //未中奖界面关闭
+                    $scope.unwin = false;
+                    $scope.copySuccess = false;
+                    /*//                    $scope.win = true;
+                     setTimeout(function () {
+                     $('.Backdrop').addClass('ation');
+                     }, 700)*/
+                }
+            });
+        }
+        /*获取扑克详情*/
+        $scope.getPokerDetail = function (ticketid) {
+            //活动未开始提示关闭
+            $scope.notStart = false;
+            //活动纸牌打开
+            $scope.Starting = true;
+            //中奖界面关闭
+            $scope.win = false;
+            //未中奖界面关闭
+            $scope.unwin = false;
+            var a = $scope.poderBackImagins.concat($scope.poderBackImagins).concat($scope.poderBackImagins);
+            $('.swiper-wrapper .porkerItem').each(function (index) {
+                $(this).css({
+                    'background': 'url(' + a[index] + ') no-repeat',
+                    'background-size': '100% 100%'
+                })
+            });
+            //            if($scope.pokerDetails.length>0){
+            //                for(var i=0;i<$scope.pokerDetails.length;i++){
+            //                    if($scope.pokerDetails[i].){
+            //
+            //                    }
+            //                }
+            //            }
+            if (previews == null) {
+                var touchTicketLog = {
+                    activityId: activity,
+                    userType: user.userType, //1为短信，2为微信
+                    userName: user.userName,
+                    ticketTypeId: ticketid
+                };
+                $http({
+                    method: "post",
+                    url: urlBase2 + "/collector/touchTicketLog/add",
+                    data: touchTicketLog
+                }).success(function (data) {
+                    console.log(data);
+                });
+            }
+        }
+        /*查看获奖更多详情*/
+        $scope.getWinnigDetail = function (index, ticketId) {
+            $scope.winPokerMoreDetail = {
+                "ticketId": "",
+                "ticketName": "",
+                "tickeImageUrl": "",
+                "tickeCodeUrl": "",
+                "ticketBrief": "",
+                "ticketSpecifics": "",
+                "usageGuide1": "",
+                "usageGuide2": "",
+                "ticketCodeType": "",
+                "ticketNo": "",
+                "ticketNoPic": ""
+            }
+            if (index == 1) {
+                $(".winTicketDetail").fadeIn(200);
+                index = 1;
+                $http({
+                    method: 'get',
+                    url: urlBase1 + '/api/ticketType/getWinnigDetail',
+                    params: {
+                        ticketTypeId: ticketId,
+                        ticketNo: '',
+                        "user-agent": useragent
+                    }
+                }).success(function (data) {
+
+                    console.log(data.data);
+                    if (data.code == 1000) {
+                        $scope.winPokerMoreDetail.ticketId = data.data.ticketId;
+                        $scope.winPokerMoreDetail.ticketName = data.data.ticketName;
+                        $scope.winPokerMoreDetail.tickeImageUrl = data.data.tickeImageUrl;
+                        $scope.winPokerMoreDetail.tickeCodeUrl = data.data.tickeCodeUrl;
+                        $scope.winPokerMoreDetail.ticketBrief = data.data.ticketBrief;
+                        $scope.winPokerMoreDetail.ticketSpecifics = data.data.ticketSpecifics;
+                        $scope.winPokerMoreDetail.usageGuide1 = data.data.usageGuide1;
+                        $scope.winPokerMoreDetail.usageGuide2 = data.data.usageGuide2;
+                        $scope.winPokerMoreDetail.ticketNo = data.data.ticketNo;
+                        $scope.winPokerMoreDetail.ticketNoPic = data.data.ticketNoPic;
+                    }
+                })
+            } else if (index == 0) {
+                $(".winTicketDetail").fadeOut(200);
+            }
+            if (previews == null) {
+                var clickWinningDatailData = {
+                    activityId: activity,
+                    activityName: activityName,
+                    userType: user.userType, //1为短信，2为微信
+                    userName: user.userName,
+                    eventType: 3 // 1=点击分享按钮 2 点击扑克更多详情 3 点击中奖详情
+                };
+                $scope.clickWinningDatail = function () {
+                    $http({
+                        method: "post",
+                        url: urlBase2 + "/collector/userEventLog/add",
+                        data: clickWinningDatailData
+                    }).success(function (data) {
+                        console.log(data);
+                    });
+                };
+            }
+        }
+        /*获取扑克更多详情*/
+        $scope.getPokerMoreDetail = function (index, ticketId) {
+            $scope.pokerMoreDetail = {
+                "ticketId": "",
+                "ticketName": "",
+                "tickeImageUrl": "",
+                "ticketSpecifics": ""
+            }
+            if (index == 1) {
+                $(".moreTicketDetail").fadeIn(200);
+                index = 1;
+                $http({
+                    method: 'get',
+                    url: urlBase1 + '/api/ticketType/getPokerMoreDetail',
+                    params: {
+                        ticketTypeId: ticketId
+                    }
+                }).success(function (data) {
+                    console.log(data.data);
+                    if (data.code == 1000) {
+                        $scope.pokerMoreDetail.ticketId = data.data.ticketId;
+                        $scope.pokerMoreDetail.ticketName = data.data.ticketName;
+                        $scope.pokerMoreDetail.tickeImageUrl = data.data.tickeImageUrl;
+                        $scope.pokerMoreDetail.ticketSpecifics = data.data.ticketSpecifics
+                    }
+                })
+            } else if (index == 0) {
+                $(".moreTicketDetail").fadeOut(200);
+            }
+            if (previews == null) {
+                var clickPokerMoreDatailData = {
+                    activityId: activity,
+                    activityName: activityName,
+                    userType: user.userType, //1为短信，2为微信
+                    userName: user.userName,
+                    eventType: 2 // 1=点击分享按钮 2 点击扑克更多详情 3 点击中奖详情
+                };
+                $http({
+                    method: "post",
+                    url: urlBase2 + "/collector/userEventLog/add",
+                    data: clickPokerMoreDatailData
+                }).success(function (data) {
+                    console.log(data);
+                });
+            }
+        }
+        /*遮罩1*/
+        $scope.sideCtrl = function (index) {
+            if (index == 1) {
+                $(".Backdrop").addClass('ation');
+                index = 1;
+            } else if (index == 0) {
+                $(".Backdrop").removeClass('ation');
+            }
+        };
+        /*遮罩2*/
+        $scope.sideCtrl0 = function (index) {
+            if (index == 1) {
+                $(".Backdrop0").addClass('ation');
+                index = 1;
+            } else if (index == 0) {
+                $(".Backdrop0").removeClass('ation');
+            }
+        };
+        /*活动为开始，先逛逛*/
+        $scope.goAround = function () {
+            $(".Backdrop").removeClass('ation');
+            //活动未开始提示打开
+            $scope.notStart = false;
+            //活动纸牌打开
+            $scope.Starting = true;
+            //中奖界面关闭
+            $scope.win = false;
+            //未中奖界面关闭
+            $scope.unwin = false;
+            $scope.copySuccess = false;
+            var a = $scope.poderBackImagins.concat($scope.poderBackImagins).concat($scope.poderBackImagins);
+            $('.swiper-wrapper .porkerItem').each(function (index) {
+                $(this).css({
+                    'background': 'url(' + a[index] + ') no-repeat',
+                    'background-size': '100% 100%'
+                })
+            });
+        }
+        $scope.shareLink = urlBase2 + "/collector/userEventLog/add";
+        /*复制链接*/
+        var client = new ZeroClipboard($('#link'));
+        client.on("ready", function (readyEvent) {
+            client.on("aftercopy", function (event) {
+                if (previews == null) {
+                    var clickShareButtonData = {
+                        activityId: activity,
+                        activityName: activityName,
+                        userType: user.userType, //1为短信，2为微信
+                        userName: user.userName,
+                        eventType: 1 // 1=点击分享按钮 2 点击扑克更多详情 3 点击中奖详情
+                    };
+                    $http({
+                        method: "post",
+                        url: urlBase2 + "/collector/userEventLog/add",
+                        data: clickShareButtonData
+                    }).success(function (data) {
+                        console.log(data);
+                    });
+                }
+                //活动未开始提示打开
+                $scope.notStart = false;
+                //活动纸牌打开
+                $scope.Starting = false;
+                //中奖界面关闭
+                $scope.win = false;
+                //未中奖界面关闭
+                $scope.unwin = false;
+                console.log("链接内容:" + event.data["text/plain"]);
+                setTimeout(function () {
+                    $(".Backdrop0").addClass('ation');
+                }, 500);
+            });
+        });
+    }]);
+    /*背景幕内容滑动*/
+    var mySwiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: 2000,
+        autoplayDisableOnInteraction: false,
+        observer: true, //修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true, //修改swiper的父元素时，自动初始化swiper
+    });
+
+    /*]]>*/
+</script>
+</body>
+
+</html>
+
+
